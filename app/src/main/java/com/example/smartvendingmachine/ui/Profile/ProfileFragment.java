@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ import com.example.smartvendingmachine.ui.board.BoardAdapter;
 import com.example.smartvendingmachine.ui.board.BoardData;
 import com.example.smartvendingmachine.ui.board.BoardFragment;
 import com.example.smartvendingmachine.ui.board.BoardMainFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.JsonArray;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +51,7 @@ public class ProfileFragment extends Fragment {
 
     private String sharedNickname;      //App 사용자 닉네임
     private String user_id;             //App 사용자 ID
+    private String getcl;               //포털 로그인종 확인
 
     private int BoardCount = 0;         //내가 쓴 게시글 개수
     private TextView txt_profile_name, txt_profile_board_number;
@@ -64,6 +67,7 @@ public class ProfileFragment extends Fragment {
     private static String TAG = "프로필 게시물";
     private String mJsonString;
 
+    private Button btnlogout;
 
 
     @Override
@@ -85,7 +89,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NicknameEditActivity.class);
-                intent.putExtra("nickname",txt_profile_name.getText().toString());
+                intent.putExtra("nickname", txt_profile_name.getText().toString());
                 startActivity(intent);
             }
         });
@@ -110,8 +114,8 @@ public class ProfileFragment extends Fragment {
                 // TODO : 아이템 클릭 이벤트를 플레그먼트에서 처뤼
                 Bundle arguments = new Bundle();
 
-                arguments.putString("userid",mSearchData.get(position).getUserid());      // 글 작성자 ID
-                arguments.putString("post_code",mSearchData.get(position).getCode());      // 게시글 코드
+                arguments.putString("userid", mSearchData.get(position).getUserid());      // 글 작성자 ID
+                arguments.putString("post_code", mSearchData.get(position).getCode());      // 게시글 코드
 
                 arguments.putString("nickname", mSearchData.get(position).getNickname());  //작성자 닉네임
                 arguments.putString("contents", mSearchData.get(position).getContents());  //작성자 글 내용
@@ -129,6 +133,21 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        //logout
+        btnlogout = rootView.findViewById(R.id.mButtonLogout);
+        btnlogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getcl.equals("naverLog")) {
+                    FirebaseAuth.getInstance().signOut();
+                } else if (getcl.equals("googleLog")) {
+
+                } else if(getcl.equals("kakaoLog")){
+
+                }
+            }
+        });
+
 
         return rootView;
     }
@@ -136,10 +155,11 @@ public class ProfileFragment extends Fragment {
     private void getSharedLoad() {
         user_id = appData.getString("ID", "");
         sharedNickname = appData.getString("NICKNAME", "");
-        Log.i("Id 가져오나 확인", "onCreateView : "+ user_id);
-        Log.i("Nickname 가져오나 확인", "onCreateView : "+ sharedNickname);
+        getcl = appData.getString("CURRENT_LOGIN", "");
+        Log.i("Id 가져오나 확인", "onCreateView : " + user_id);
+        Log.i("Nickname 가져오나 확인", "onCreateView : " + sharedNickname);
+        Log.i("로그인 확인", "네이버인가 구글인가 카카오인가 : " + getcl);
     }
-
 
 
     private class GetData extends AsyncTask<String, Void, String> {
@@ -255,13 +275,13 @@ public class ProfileFragment extends Fragment {
 
             JSONArray MyPost = jsonObject.getJSONArray(TAG_POST);
 
-            for (int i = MyPost.length()-1; i>=0; i--) {
+            for (int i = MyPost.length() - 1; i >= 0; i--) {
 
                 JSONObject item = MyPost.getJSONObject(i);
 
                 String POST_ID = item.getString(TAG_POST_ID);
 
-                if( POST_ID.equals( user_id ) ){            // 내가 쓴 글 가져오기 위해, 게시글 작성자 ID와 App사용자 ID를 비교.
+                if (POST_ID.equals(user_id)) {            // 내가 쓴 글 가져오기 위해, 게시글 작성자 ID와 App사용자 ID를 비교.
                     BoardCount++;                           // 게시글 한 개 씩 가져오면서 게시글 개수 1 증가.
                     String POST_CODE = item.getString(TAG_CODE);
                     String POST_TITLE = item.getString(TAG_TITLE);
@@ -274,10 +294,9 @@ public class ProfileFragment extends Fragment {
 
                     BoardData boardData = new BoardData();
 
-                    if(POST_MANAGER_COMMENT.equals("0")){
+                    if (POST_MANAGER_COMMENT.equals("0")) {
                         POST_MANAGER_COMMENT = "확인안함";
-                    }
-                    else {
+                    } else {
                         POST_MANAGER_COMMENT = "확인됨";
                     }
 
@@ -298,7 +317,7 @@ public class ProfileFragment extends Fragment {
 
                 }
             }
-            txt_profile_board_number.setText( String.valueOf(BoardCount) );
+            txt_profile_board_number.setText(String.valueOf(BoardCount));
 
 
         } catch (JSONException e) {
@@ -419,15 +438,13 @@ public class ProfileFragment extends Fragment {
                 String USER_ID = user.getString(TAG_USER_ID);
 
 
-                if ( USER_ID.equals(user_id) )
-                {
+                if (USER_ID.equals(user_id)) {
                     String USER_NICKNAME = user.getString(TAG_USER_NICKNAME);
                     save(USER_NICKNAME);
                     getSharedLoad();
                     txt_profile_name.setText(sharedNickname);
                 }
             }
-
 
 
         } catch (JSONException e) {

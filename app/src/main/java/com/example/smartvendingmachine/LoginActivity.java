@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //서버 IP
     private static String IP_ADDRESS = "211.211.158.42";
-    private static String StrUSER_ID, StrUSER_NICKNAME,StrUSER_EMAIL;
+    private static String StrUSER_ID, StrUSER_NICKNAME, StrUSER_EMAIL;
 
     //네이버 로그인
     private FloatingActionButton mButtonNaver;
@@ -90,11 +90,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         public Unit invoke(OAuthToken oAuthToken, Throwable throwable) { //Token이 null이면 실패
             if (oAuthToken != null) {
                 //TBD 로그인이 되었으니 수행할일 여기에 작성
-                Log.i("로그인","로그인 되었습니다");
+                Log.i("로그인", "로그인 되었습니다");
             }
             if (throwable != null) {
                 //TBD 실패하면 오류 수행할일 여기에 작성
-                Log.i("로그인","로그인에 실패하였습니다");
+                Log.i("로그인", "로그인에 실패하였습니다");
             }
             updateKakaoLoginUi();
             return null;
@@ -115,8 +115,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // 이전에 로그인 정보를 저장시킨 기록이 있다면
         if (saveLoginData) {
-            Intent intent = new Intent(getApplicationContext() , MainActivity.class);
-            intent.putExtra("nickname",nickname);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("nickname", nickname);
             startActivity(intent);
         }
 
@@ -139,9 +139,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 mOAuthLoginModule = OAuthLogin.getInstance();
                 mOAuthLoginModule.init(
                         mContext
-                        ,getString(R.string.naver_client_id)
-                        ,getString(R.string.naver_client_secret)
-                        ,getString(R.string.naver_client_name)
+                        , getString(R.string.naver_client_id)
+                        , getString(R.string.naver_client_secret)
+                        , getString(R.string.naver_client_name)
                         //,OAUTH_CALLBACK_INTENT
                         // SDK 4.1.4 버전부터는 OAUTH_CALLBACK_INTENT변수를 사용하지 않습니다.
                 );
@@ -153,15 +153,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             String accessToken = mOAuthLoginModule.getAccessToken(mContext);    // accessToken으로 사용자 정보 가져올 수 있음.
                             NaverTask task = new NaverTask();
                             task.execute(accessToken);              // accessToken으로 Logic 실행.
-                        }
-                        else {
+                        } else {
                             String errorCode = mOAuthLoginModule
                                     .getLastErrorCode(mContext).getCode();
                             String errorDesc = mOAuthLoginModule.getLastErrorDesc(mContext);
                             Toast.makeText(mContext, "errorCode:" + errorCode
                                     + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT).show();   // 에러문 출력
                         }
-                    };
+                    }
+
+                    ;
                 };
                 mOAuthLoginModule.startOauthLoginActivity(LoginActivity.this, mOAuthLoginHandler);
                 break;
@@ -207,7 +208,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     // 설정값을 저장하는 함수 ( 로그인 한적 있는지 , ID , 닉네임 )
-    private void save(Boolean flag, String id, String nickname) {
+    private void save(Boolean flag, String id, String nickname, String cl) {
         // SharedPreferences 객체만으론 저장 불가능 Editor 사용
         SharedPreferences.Editor editor = appData.edit();
 
@@ -216,6 +217,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editor.putBoolean("SAVE_LOGIN_DATA", flag);
         editor.putString("ID", id);
         editor.putString("NICKNAME", nickname);
+        editor.putString("CURRENT_LOGIN", cl);
 
         // apply, commit 을 안하면 변경된 내용이 저장되지 않음
         editor.apply();
@@ -283,6 +285,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Log.d("네아로_이름", jsonObject.getString("name"));
                     Log.d("네아로_닉네임", jsonObject.getString("nickname"));
                     Log.d("네아로_프로필사진", jsonObject.getString("profile_image"));
+                    String cl = "naverLog";
 
                     // accessToken으로 가져온 값 변수에 담기.
                     StrUSER_ID = jsonObject.getString("id");
@@ -296,11 +299,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     InsertData task = new InsertData();
                     task.execute("http://" + IP_ADDRESS + "/yongrun/svm/SIGNUP_ANDRIOD.php", StrUSER_ID, StrUSER_NICKNAME, StrUSER_EMAIL);
 
-                    if ( ! (StrUSER_ID == null || StrUSER_NICKNAME == null || StrUSER_ID=="" || StrUSER_NICKNAME == "") )
-                    {
-                        save(true,StrUSER_ID,StrUSER_NICKNAME); // SharedPreferences로 유저 아이디, 유저 닉네임 값 App내에 저장.
+                    if (!(StrUSER_ID == null || StrUSER_NICKNAME == null || StrUSER_ID == "" || StrUSER_NICKNAME == "")) {
+                        save(true, StrUSER_ID, StrUSER_NICKNAME, cl); // SharedPreferences로 유저 아이디, 유저 닉네임 값 App내에 저장.
                         load(); // App 내에 저장된 유저 정보 값 불러오기
-                        Intent intent = new Intent(LoginActivity.this , MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
 
@@ -310,6 +312,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }
+
     // 회원 정보 서버 삽입
     class InsertData extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
@@ -411,7 +414,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Log.i(TAG, "invoke: nickname=" + user.getKakaoAccount().getProfile().getNickname());
                     Log.i(TAG, "invoke: gender=" + user.getKakaoAccount().getGender());
                     Log.i(TAG, "invoke: age=" + user.getKakaoAccount().getAgeRange());
-                    Log.i(TAG, "invoke : profile = " +user.getKakaoAccount().getProfile());
+                    Log.i(TAG, "invoke : profile = " + user.getKakaoAccount().getProfile());
+                    String cl = "kakaoLog";
 
                     StrUSER_ID = String.valueOf(user.getId());
                     StrUSER_NICKNAME = user.getKakaoAccount().getProfile().getNickname();
@@ -422,11 +426,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     InsertData task = new InsertData();
                     task.execute("http://" + IP_ADDRESS + "/yongrun/svm/SIGNUP_ANDRIOD.php", StrUSER_ID, StrUSER_NICKNAME, StrUSER_EMAIL);
 
-                    if ( ! (StrUSER_ID == null || StrUSER_NICKNAME == null || StrUSER_ID=="" || StrUSER_NICKNAME == "") )
-                    {
-                        save(true,StrUSER_ID,StrUSER_NICKNAME); // SharedPreferences로 유저 아이디, 유저 닉네임 값 App내에 저장.
+                    if (!(StrUSER_ID == null || StrUSER_NICKNAME == null || StrUSER_ID == "" || StrUSER_NICKNAME == "")) {
+                        save(true, StrUSER_ID, StrUSER_NICKNAME, cl); // SharedPreferences로 유저 아이디, 유저 닉네임 값 App내에 저장.
                         load(); // nickname, savelogindata, id
-                        Intent intent = new Intent(LoginActivity.this , MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
 
@@ -442,27 +445,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) { // 구글 로그인 인증을 요청 했을 때 결과 값을 되돌려 받는 곳.
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQ_SIGN_GOOGLE){
+        if (requestCode == REQ_SIGN_GOOGLE) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if(result.isSuccess()){ //인증 결과가 성공
+            if (result.isSuccess()) { //인증 결과가 성공
                 GoogleSignInAccount account = result.getSignInAccount(); //account 라는 데이터는 구글 로그인 정보를 담고있다. (닉네임, 프로필사진uri, 이메일주소...등)
                 resultLogin(account); //로그인 결과 값 출력 수행하라는 메소드
             }
         }
     }
+
     private void resultLogin(GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){ //로그인이 성공했으면...
+                        if (task.isSuccessful()) { //로그인이 성공했으면...
 
                             Log.i("아이디 확인", account.getId()); //기본키
                             Log.i("이메일 확인", account.getEmail());
                             Log.i("아이디 토큰 확인", account.getIdToken());
                             Log.i("닉네임 확인", account.getGivenName()); //닉네임
-
+                            String cl = "googleLog";
 
                             //로그인 값 변수에 담기
                             StrUSER_ID = account.getId();
@@ -473,19 +477,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             InsertData insert = new InsertData();
                             insert.execute("http://" + IP_ADDRESS + "/yongrun/svm/SIGNUP_ANDRIOD.php", StrUSER_ID, StrUSER_NICKNAME, StrUSER_EMAIL);
 
-                            if ( ! (StrUSER_ID == null || StrUSER_NICKNAME == null || StrUSER_ID=="" || StrUSER_NICKNAME == "") )
-                            {
-                                save(true,StrUSER_ID,StrUSER_NICKNAME); // SharedPreferences로 유저 아이디, 유저 닉네임 값 App내에 저장.
+                            if (!(StrUSER_ID == null || StrUSER_NICKNAME == null || StrUSER_ID == "" || StrUSER_NICKNAME == "")) {
+                                save(true, StrUSER_ID, StrUSER_NICKNAME, cl); // SharedPreferences로 유저 아이디, 유저 닉네임 값 App내에 저장.
                                 load(); // nickname, savelogindata, id
-                                Intent intent = new Intent(LoginActivity.this , MainActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }
 
 
-
-
-                        }
-                        else{ //로그인이 실패했으면...
+                        } else { //로그인이 실패했으면...
                             Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
                         }
                     }
