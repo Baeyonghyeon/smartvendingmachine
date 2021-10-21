@@ -1,75 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/intro_"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorOwn"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-103dp">
-
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="394dp"
-            android:layout_height="364dp"
-            android:layout_gravity="center"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/free_icon_vending_machine_1559642__1_" />
-
-        <TextView
-            android:layout_width="400dp"
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:text="(스마트 자판기)"
-            android:textColor="@android:color/white"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:typeface="sans" />
-
-        <TextView
-            android:layout_width="410dp"
-            android:layout_height="60dp"
-            android:autoLink="all"
-            android:gravity="center_horizontal"
-            android:text="Smart vending"
-            android:textColor="@android:color/white"
-            android:textSize="50sp"
-            android:textStyle="bold"
-            android:typeface="sans" />
-
-        <TextView
-            android:layout_width="400dp"
-            android:layout_height="30dp"
-            android:autoLink="all"
-            android:gravity="center_horizontal"
-            android:text="Korean Smart Vending machine"
-            android:textColor="@android:color/holo_orange_light"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:typeface="sans" />
-
-        <TextView
-            android:layout_marginTop="100dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:layout_gravity="bottom"
-            android:textAlignment="center"
-            android:text="상호:(주)Yongrun 대표자: 배용현 Tel: 031-1234-4567"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:typeface="sans"
-            tools:ignore="RtlCompat" />
-
-
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

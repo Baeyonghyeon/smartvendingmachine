@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //네이버 로그인
     private FloatingActionButton mButtonNaver;
-    private static OAuthLogin mOAuthLoginModule;
+    public static OAuthLogin mOAuthLoginModule;
     private static Context mContext;
 
     //구글 로그인

@@ -48,6 +48,9 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.example.smartvendingmachine.LoginActivity.mOAuthLoginModule;
+
+import com.example.smartvendingmachine.LoginActivity;
 
 public class ProfileFragment extends Fragment {
 
@@ -99,10 +102,15 @@ public class ProfileFragment extends Fragment {
 
                 if (current_login.equals("NAVER")) { // 네이버 로그아웃
 
+                    mOAuthLoginModule.logout(getActivity());
                     SharedPreferences.Editor editor = appData.edit();           // SharedPreferences 에디터 선언.
                     editor.putString("CURRENT_LOGIN","");
                     editor.putBoolean("SAVE_LOGIN_DATA", false);
                     editor.commit();
+
+                    Toast.makeText(getActivity(),"로그아웃 하였습니다.",Toast.LENGTH_SHORT).show();
+
+                    getActivity().finish();
                 }
                 else if(current_login.equals("KAKAO")) {
                     UserApiClient.getInstance().logout(error -> {
