@@ -8,25 +8,13 @@
 ## 서비스 스크린샷
 ![image1](https://user-images.githubusercontent.com/77232856/148342691-c5497e98-cd37-4ece-87b0-b394ee7a7221.png)
 
-## 사용한 라이브러리
-### Foundation
-[Appcompat](https://developer.android.com/topic/libraries/support-library/packages#v7-appcompat)   
-
-### Architcture
-[Lifecycles](https://developer.android.com/topic/libraries/architecture/lifecycle)   
-[Navigation](https://developer.android.com/guide/navigation)   
-[ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)  
-
-### UI
-[ConstraintLayout](https://developer.android.com/training/constraint-layout?hl=ko)   
-[MaterialDesign](https://material.io/design)   
-[RecylerView](https://developer.android.com/guide/topics/ui/layout/recyclerview?hl=ko)  
-[SwipeRefreshLayout](https://developer.android.com/training/swipe/add-swipe-interface?hl=ko)   
-[Fragment](https://developer.android.com/guide/components/fragments)   
-[viewPager2](https://developer.android.com/guide/navigation/navigation-swipe-view-2?hl=ko)  
-
-### Third Party
-[gson](https://github.com/google/gson) 
+## Tech Spec
+- Java
+- Glide
+- [Bottom Navigation](https://developer.android.com/reference/com/google/android/material/bottomnavigation/BottomNavigationView)   
+- [SwipeRefreshLayout](https://developer.android.com/training/swipe/add-swipe-interface?hl=ko)   
+- [Gson](https://github.com/google/gson) 
+- [viewPager2](https://developer.android.com/guide/navigation/navigation-swipe-view-2?hl=ko)  
 
 ### 시현 영상
 [시현 영상](https://www.youtube.com/watch?v=6tzyGNPS4sY)
