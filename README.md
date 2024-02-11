@@ -10,7 +10,6 @@
 
 ## Tech Spec
 - Java
-- Glide
 - [Bottom Navigation](https://developer.android.com/reference/com/google/android/material/bottomnavigation/BottomNavigationView)   
 - [SwipeRefreshLayout](https://developer.android.com/training/swipe/add-swipe-interface?hl=ko)   
 - [Gson](https://github.com/google/gson) 
